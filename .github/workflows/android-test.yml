@@ -22,42 +22,11 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Iniciar emulador Android
-        run: |
-           docker run -d \
-            -p 5554:5554 \
-            -p 5555:5555 \
-            budtmo/docker-android:emulator_11.0
-
-      - name: Conectar e aguardar emulador
-        run: |
-          adb connect localhost:5555
-      
-          echo "Esperando dispositivo aparecer..."
-          for i in {1..30}; do
-            adb devices
-            if adb devices | grep -q "device$"; then
-              echo "ADB conectado!"
-              break
-            fi
-            sleep 5
-          done
-      
-          echo "Esperando Android terminar boot..."
-          for i in {1..60}; do
-            boot=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
-            if [ "$boot" = "1" ]; then
-              echo "Android pronto!"
-              break
-            fi
-            echo "Boot ainda não completou..."
-            sleep 5
-          done
-
-      - name: Instalar APK
-        run: |
-          adb install qafoodTest.apk
-
-      - name: Rodar testes Maestro
-        run: |
-          maestro test .maestro/
+      - name: Rodar emulador + testes
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          script: |
+            adb install qafoodTest.apk
+            maestro test .maestro/
