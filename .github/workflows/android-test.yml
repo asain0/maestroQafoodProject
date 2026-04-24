@@ -24,10 +24,7 @@ jobs:
 
       - name: Iniciar emulador Android
         run: |
-          docker run -d \
-            -p 5554:5554 \
-            -p 5555:5555 \
-            budtmo/docker-android:emulator_11.0
+          docker compose up -d
 
       - name: Esperar emulador iniciar
         run: |
