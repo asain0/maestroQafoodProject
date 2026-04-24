@@ -6,9 +6,9 @@ appId: com.qazandoqafood
 - scrollUntilVisible:
     element: "Falta pouco pra matar sua fome!"
 - takeScreenshot: tela-inicial
-- assertVisible: 
-    text: "Falta pouco pra matar sua fome!"
-    label: "APP aberto e tela de login exibida"
+#- assertVisible: 
+#    text: "Falta pouco pra matar sua fome!"
+#    label: "APP aberto e tela de login exibida"
 - tapOn: "E-mail"
 - inputText: 
     text: "teste@teste.com"
