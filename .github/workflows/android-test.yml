@@ -50,9 +50,17 @@ jobs:
             adb wait-for-device
 
             echo "Garantindo boot completo..."
-            until adb shell getprop sys.boot_completed | grep -m 1 '1'; do
-              sleep 2
-            done
+             until [ "$BOOT_COMPLETED" = "1" ] || [ $elapsed -ge $timeout ]; do
+                BOOT_COMPLETED=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+                echo "Aguardando boot... ($BOOT_COMPLETED)"
+                sleep 2
+                elapsed=$((elapsed+2))
+              done
+              
+              if [ "$BOOT_COMPLETED" != "1" ]; then
+                echo "Emulator não iniciou corretamente"
+                exit 1
+              fi
 
             echo "Desbloqueando tela..."
             adb shell input keyevent 82
@@ -66,6 +74,7 @@ jobs:
       # 📸 Logs e evidências (ESSENCIAL pra debug)
       - name: Upload de artifacts
         if: always()
+        continue-on-error: true
         uses: actions/upload-artifact@v4
         with:
           name: maestro-artifacts
