@@ -3,7 +3,6 @@ appId: com.qazandoqafood
 - launchApp:
     clearState: false
 #Login
-- waitForAnimationToEnd
 - takeScreenshot: tela-inicial
 - assertVisible: 
     text: "Falta pouco pra matar sua fome!"
