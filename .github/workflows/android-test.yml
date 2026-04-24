@@ -30,7 +30,7 @@ jobs:
 
       - name: Instalar APK
         run: |
-          adb install app.apk
+          adb install qafoodTest.apk
 
       - name: Rodar testes Maestro
         run: |
