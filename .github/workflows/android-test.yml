@@ -7,11 +7,21 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Baixar código
         uses: actions/checkout@v3
-      
+
+      # 🔥 Cache Android (ganho grande de tempo)
+      - name: Cache Android SDK
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.android
+            /usr/local/lib/android
+          key: android-${{ runner.os }}
+
       - name: Instalar ADB
         run: |
           sudo apt-get update
@@ -22,11 +32,42 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
+      # 🚀 Emulator + execução com mais controle
       - name: Rodar emulador + testes
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 30
           arch: x86_64
+          profile: Nexus 6
+          emulator-options: >
+            -no-window
+            -no-audio
+            -no-boot-anim
+            -gpu swiftshader_indirect
+          disable-animations: true
           script: |
+            echo "Aguardando device..."
+            adb wait-for-device
+
+            echo "Garantindo boot completo..."
+            until adb shell getprop sys.boot_completed | grep -m 1 '1'; do
+              sleep 2
+            done
+
+            echo "Desbloqueando tela..."
+            adb shell input keyevent 82
+
+            echo "Instalando APK..."
             adb install qafoodTest.apk
+
+            echo "Rodando testes Maestro..."
             maestro test .maestro/
+
+      # 📸 Logs e evidências (ESSENCIAL pra debug)
+      - name: Upload de artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: maestro-artifacts
+          path: |
+            ~/.maestro/tests/
