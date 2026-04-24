@@ -29,19 +29,30 @@ jobs:
             -p 5555:5555 \
             budtmo/docker-android:emulator_11.0
 
-      - name: Esperar emulador iniciar
+      - name: Conectar e aguardar emulador
         run: |
-           adb connect localhost:5555
-            # tenta várias vezes até conectar
-            for i in {1..10}; do
-              adb devices
-              if adb devices | grep -q "device$"; then
-                echo "Emulador conectado!"
-                break
-              fi
-              echo "Aguardando emulador..."
-              sleep 10
-            done
+          adb connect localhost:5555
+      
+          echo "Esperando dispositivo aparecer..."
+          for i in {1..30}; do
+            adb devices
+            if adb devices | grep -q "device$"; then
+              echo "ADB conectado!"
+              break
+            fi
+            sleep 5
+          done
+      
+          echo "Esperando Android terminar boot..."
+          for i in {1..60}; do
+            boot=$(adb shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')
+            if [ "$boot" = "1" ]; then
+              echo "Android pronto!"
+              break
+            fi
+            echo "Boot ainda não completou..."
+            sleep 5
+          done
 
       - name: Instalar APK
         run: |
