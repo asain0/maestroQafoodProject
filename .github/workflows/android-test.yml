@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Baixar código
         uses: actions/checkout@v3
+      
+      - name: Instalar ADB
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y adb
 
       - name: Instalar Maestro
         run: |
@@ -27,6 +32,8 @@ jobs:
       - name: Esperar emulador iniciar
         run: |
           adb wait-for-device
+          adb devices
+          sleep 20
 
       - name: Instalar APK
         run: |
