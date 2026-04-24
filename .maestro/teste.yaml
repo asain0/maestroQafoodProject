@@ -3,6 +3,7 @@ appId: com.qazandoqafood
 - launchApp:
     clearState: false
 #Login
+- waitForAnimationToEnd
 - assertVisible: 
     text: "Falta pouco pra matar sua fome!"
     label: "APP aberto e tela de login exibida"
