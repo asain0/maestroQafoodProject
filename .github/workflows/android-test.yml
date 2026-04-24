@@ -24,13 +24,24 @@ jobs:
 
       - name: Iniciar emulador Android
         run: |
-          docker compose up -d
+           docker run -d \
+            -p 5554:5554 \
+            -p 5555:5555 \
+            budtmo/docker-android:emulator_11.0
 
       - name: Esperar emulador iniciar
         run: |
-          adb wait-for-device
-          adb devices
-          sleep 20
+           adb connect localhost:5555
+            # tenta várias vezes até conectar
+            for i in {1..10}; do
+              adb devices
+              if adb devices | grep -q "device$"; then
+                echo "Emulador conectado!"
+                break
+              fi
+              echo "Aguardando emulador..."
+              sleep 10
+            done
 
       - name: Instalar APK
         run: |
