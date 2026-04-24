@@ -1,0 +1,85 @@
+appId: com.qazandoqafood
+---
+- launchApp:
+    clearState: false
+#Login
+- assertVisible: 
+    text: "Falta pouco pra matar sua fome!"
+    label: "APP aberto e tela de login exibida"
+- tapOn: "E-mail"
+- inputText: 
+    text: "teste@teste.com"
+    label: "Informando usuário válido"
+- tapOn: "Senha"
+- inputText: 
+    text: "123456"
+    label: "Informando senha válida"
+- tapOn:
+    id: "login-button"
+    label: "Efetuando login"
+
+#Home
+- assertVisible: 
+    text: "Lojas"
+    label: "Verificando exibição da lista de lojas na Home"
+
+- tapOn:
+    id: "address-button"
+    label: "Selecionar endereço"
+- tapOn: "PERMITIR"
+
+- scrollUntilVisible:
+    element: "Bulldog Hamburgueria"
+    label: "Verificando existencia da loja Buldog Hamburgeria"
+
+- tapOn: 
+    text: "Bulldog Hamburgueria"
+    label: "Acessando loja"
+
+#Loja
+- assertVisible: 
+    text: "Bulldog Hamburgueria"
+    label: "Verificando acesso a loja"
+
+- assertVisible:
+    point: 93%,41%
+    label: "Verificando existência de ao menos um produto"
+
+- tapOn:
+    point: 93%,54%
+    label: "Adicionando produto"
+
+- tapOn: 
+    text: "open-cart-button"
+    label: "Redirecionar para tela Sacola"
+#Sacola
+- assertVisible: 
+    text: "Sacola"
+    label: "Verificando Redirecionamento para tela Sacola"
+
+- tapOn: 
+    text: "confirm-order-button"
+    label: "Verificando acesso a tela Sacola"
+
+
+#Finalizar pedido
+- assertVisible: 
+    text: "Finalizar pedido"
+    label: "Verificando acesso a tela Finalizar Pedido"
+- scrollUntilVisible:
+    element: "Cart\u00e3o de cr\u00e9dito"
+    label: "Mover até forma de pagamento Cartão de crédito"
+- tapOn: 
+    text: "Cart\u00e3o de cr\u00e9dito"
+    label: "Selecionar opção Cartão de Crédito"
+- tapOn:
+    id: "do-order-button"
+    label: "Clicar em Fazer pedido"
+
+#Acompanhar pedido
+- assertVisible: 
+    text: "Acompanhar pedido"
+    label: "Verificar acesso a tela Acompanhar Pedido"
+- assertVisible: 
+    text: "Pedido realizado"
+    label: "Verificar sucesso em realizar pedido"
