@@ -3,6 +3,8 @@ appId: com.qazandoqafood
 - launchApp:
     clearState: false
 #Login
+- scrollUntilVisible:
+    element: "Falta pouco pra matar sua fome!"
 - takeScreenshot: tela-inicial
 - assertVisible: 
     text: "Falta pouco pra matar sua fome!"
